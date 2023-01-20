@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+
+  db:
+    image: postgres
+    restart: always
+    environment: 
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_DB=${DATABASE_NAME}
+      - PGPORT=${DATABASE_PORT}
+    volumes:
+      - db_files:/var/lib/docker/volumes/team-october-2022-app-be_db_files/_data
+    ports: 
+      - 5000:${DATABASE_PORT}
+
+  app:
+    build: .
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 8080:${PORT}
+    depends_on:
+      - db
+
+volumes:
+    db_files:
